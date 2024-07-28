@@ -1,7 +1,10 @@
 {
-  "name": "@codeborne/i18n-json",
-  "version": "0.3.7",
-  "description": "Simple framework-neutral json-based translations with no dependencies",
+  "engines": {
+    "node": "~20"
+  },
+  "name": "@jesuskris/i18n-json-multi-client",
+  "version": "0.4.0",
+  "description": "Simple framework-neutral json-based translations with no dependencies and support for multi-client.\n \nForked and extended upon [@codeborne/i18n-json](https://github.com/codeborne/i18n-json/tree/main)",
   "type": "module",
   "files": ["build/src", "build/bin"],
   "types": "build/src/index.d.ts",
@@ -19,20 +22,24 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/codeborne/i18n-json.git"
+    "url": "git+https://github.com/JesusKris/i18n-json-multi-client.git"
   },
   "keywords": [
     "i18n",
     "translation",
     "localization",
-    "internationalization"
+    "internationalization",
+    "multi-client"
   ],
   "author": "Anton Keks",
+  "contributors": [
+    "Robert Kris Laur"
+  ],
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/codeborne/i18n-json/issues"
+    "url": "https://github.com/JesusKris/i18n-json-multi-client/issues"
   },
-  "homepage": "https://github.com/codeborne/i18n-json#readme",
+  "homepage": "https://github.com/JesusKris/i18n-json-multi-client#readme",
   "devDependencies": {
     "@types/chai": "^4.3.5",
     "@types/mocha": "^10.0.1",
