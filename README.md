@@ -1,9 +1,13 @@
-# @codeborne/i18n-json
+# @jesuskris/i18n-json-multi-client
 
-Simple framework-neutral json-based translations with no dependencies.
+Simple framework-neutral json-based translations with no dependencies and support for multi-client.
+
+Forked and extended upon [@codeborne/i18n-json](https://github.com/codeborne/i18n-json/tree/main)
+
+---
 
 ```
-npm install @codeborne/i18n-json
+npm install @jesuskris/i18n-json-multi-client
 ```
 
 See [sample](sample) on how to structure your translation files.
@@ -16,8 +20,8 @@ In your project create a `i18n.ts` which will you use for imports:
 
 ```ts
 import langs from '../i18n/langs.json'
-import {init} from '@codeborne/i18n-json'
-export * from '@codeborne/i18n-json'
+import {init} from '@jesuskris/i18n-json-multi-client'
+export * from '@jesuskris/i18n-json-multi-client'
 
 export async function initTranslations() {
   await init({langs})
