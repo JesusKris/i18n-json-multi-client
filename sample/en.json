@@ -1,7 +1,14 @@
 {
-  "title": "Just a sample",
+  "homepage": {
+    "header": {
+      "client1": "Welcome to our Client 1 Portal",
+      "client2": "Welcome to our Client 2 Portal",
+      "default": "Welcome to our Portal"
+    }
+  },
   "contacts": {
-    "email": "E-mail",
-    "phone": "Phone"
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address"
   }
 }

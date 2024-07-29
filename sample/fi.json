@@ -1,0 +1,10 @@
+{
+  "homepage": {
+    "header": "Tervetuloa portaalimme"
+  },
+  "contacts": {
+    "email": "Sähköposti",
+    "phone": "Puhelin",
+    "address": "Osoite"
+  }
+}
