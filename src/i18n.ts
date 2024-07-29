@@ -1,6 +1,18 @@
 /**
  * ISC License
  *
+ * Permission to use, copy, modify, and/or distribute this software for any
+ * purpose with or without fee is hereby granted, provided that the above
+ * copyright notice and this permission notice appear in all copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL WARRANTIES WITH
+ * REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED WARRANTIES OF MERCHANTABILITY
+ * AND FITNESS. IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT,
+ * INDIRECT, OR CONSEQUENTIAL DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM
+ * LOSS OF USE, DATA OR PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR
+ * OTHER TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ *
  * Original Author: ["Anton Keks"]
  * Original Repository: ["https://github.com/codeborne/i18n-json.git"]
  *
@@ -88,27 +100,33 @@ export function resolve(key: string, from: Record<string, any> = dict): any {
   let result = from;
 
   for (const k of keys) {
-    if (!result) break;
-
-    // Check for client-specific keys
-    if (typeof result[k] === 'object' && result[k] !== null) {
-
-      const clientKey = clientIdentifier;
-
-      if (clientKey && typeof result[k][clientKey] !== 'undefined') {
-        result = result[k][clientKey];
-        continue;
-      } else if (typeof result[k].default !== 'undefined') {
-        result = result[k].default;
-        continue;
-      }
+    if (!result || typeof result !== 'object') {
+      return key; // Return the key if result is not an object or is null
     }
 
-    result = result[k];
+    const value = result[k];
+
+    // If value is not an object or is null, return the value immediately
+    if (typeof value !== 'object' || value === null) {
+      return value;
+    }
+
+    // Check for client-specific or default key
+    const clientKey = clientIdentifier;
+    if (clientKey && value[clientKey] !== undefined) {
+      result = value[clientKey];
+    } else if (value['default'] !== undefined) {
+      result = value['default'];
+    } else {
+      result = value;
+    }
   }
 
-  return result;
+  // If the final result is still an object, return the key
+  return typeof result === 'object' && result !== null ? key : result;
 }
+
+
 
 export function _(key: string, values?: Values, from: Dict = dict): string {
   let result = resolve(key, from)

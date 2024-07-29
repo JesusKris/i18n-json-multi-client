@@ -63,11 +63,13 @@ describe('multi-client', () => {
         langs: ["en"],
         dicts:
           {
-            faulty:
-              {
-                client1: "Welcome to our Client 1 Portal",
-                client2: "Welcome to our Client 2 Portal"
-              },
+            en: {
+              faulty:
+                {
+                  client1: "Welcome to our Client 1 Portal",
+                  client2: "Welcome to our Client 2 Portal"
+                },
+            }
           },
         clientIdentifier: "client3"
       })
@@ -82,6 +84,26 @@ describe('multi-client', () => {
     expect(_("contacts.phone")).to.equal("Phone")
     expect(_("contacts.address")).to.equal("Address")
 
+  });
+
+  it('should resolve client1 client-specific header in English and apply defined plural rules', async () => {
+    await init(
+      {
+        langs: ["en"],
+        dicts:
+          {
+            en: {
+              header: {
+                client1: 'Welcome to our Client1 {count|zero:nothing|one:Portal|other:# Portals}',
+                client2: "Welcome to our Client2 Portal"
+              }
+            }
+          },
+        clientIdentifier: "client1"
+      })
+
+    expect(_("header", {count: 1})).to.equal("Welcome to our Client1 Portal")
+    expect(_("header", {count: 3})).to.equal("Welcome to our Client1 3 Portals")
   });
 
   it('should resolve header in Finnish without client-specific structure', async () => {
