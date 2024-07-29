@@ -16,14 +16,17 @@ This format is also supported by [Translate Tool GUI](https://github.com/codebor
 
 ### Usage
 
+#### Non-specific
+
 In your project create a `i18n.ts` which will you use for imports:
 
 ```ts
-import langs from '../i18n/langs.json'
 import {init} from '@jesuskris/i18n-json-multi-client'
 export * from '@jesuskris/i18n-json-multi-client'
 
+export let langs = ["en", "fi"]
 export async function initTranslations() {
+
   await init({langs})
 }
 ```
@@ -37,6 +40,50 @@ Pluralized strings are also supported: `_('trees', {count: 1})`, which for Engli
 `"trees": "You have {count|one:# tree|other:# trees}"` and Russian would be:
 `"trees": "У вас есть {count|one:одно дерево|few:# дерева|many:# деревьев}"`.
 Plurality keys are provided by browser's `Intl.PluralRules` for the language.
+
+See tests for more examples.
+
+#### Client-specific
+
+To write client-specific translations, you need to pass in an identifier:
+
+```ts
+import {init} from '@jesuskris/i18n-json-multi-client'
+export * from '@jesuskris/i18n-json-multi-client'
+
+export let langs = ["en", "fi"]
+export let clientIdentifier = "client1"
+export async function initTranslations() {
+  await init({langs, clientIdentifier})
+}
+```
+Then in translation format define client specific translations:
+```json
+{
+  "homepage": {
+    "header": {
+      "client1": "Welcome to our Client 1 Portal",
+      "client2": "Welcome to our Client 2 Portal",
+      "default": "Welcome to our Portal"
+    }
+  },
+  "contacts": {
+    "email": "Email",
+    "phone": "Phone",
+    "address": "Address"
+  }
+}
+```
+
+In the above example we have defined 2 client specific translations for key **homepage.header**
+
+Now simply call the translation in your code:
+```sveltehtml
+<header>{_("homepage.header")}</header> <!--Welcome to our Client 1 Portal-->
+```
+The default key in client-specific translations acts as a fallback if clientIdentifier is not matched.
+
+*Keep in mind that it works without the default fallback. When a key is not found, it returns the full key path.*
 
 See tests for more examples.
 
