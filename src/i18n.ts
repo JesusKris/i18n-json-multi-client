@@ -1,5 +1,17 @@
+/**
+ * ISC License
+ *
+ * Original Author: ["Anton Keks"]
+ * Original Repository: ["https://github.com/codeborne/i18n-json.git"]
+ *
+ * Modifications made by ["Robert Kris Laur"]
+ * - Added client-specific translations feature by modifying the Options parameter & resolve function which now checks if the wanted key is an object.
+ *   Then it checks whether the clientIdentifier has been set and takes the translation based on that, otherwise it looks for "default" key.
+ *   If that is also not defined, it returns the key as is the default behavior.
+ */
+
 export type Dict = Record<string, any>
-export type Values = {[name: string]: any}
+export type Values = { [name: string]: any }
 
 export let jsonPath = '/i18n/'
 export let version = ''
@@ -9,6 +21,7 @@ export let langs = ['en']
 export let defaultLang = 'en'
 export let lang = defaultLang
 export let fallbackToDefault = true
+export let clientIdentifier: string | undefined = undefined
 
 let dict: Dict = {}
 
@@ -17,11 +30,12 @@ export interface Options {
   defaultLang?: string,
   lang?: string,
   fallbackToDefault?: boolean
-  dicts?: {[lang: string]: Dict}
-  selectLang?: () => string|undefined
+  dicts?: { [lang: string]: Dict }
+  selectLang?: () => string | undefined
   jsonPath?: string
   version?: string
   cookieName?: string
+  clientIdentifier?: string | undefined
 }
 
 export async function init(opts: Options) {
@@ -32,13 +46,14 @@ export async function init(opts: Options) {
   if (opts.jsonPath) jsonPath = opts.jsonPath
   if (opts.version) version = opts.version
   if (opts.cookieName) cookieName = opts.cookieName
+  if (opts.clientIdentifier) clientIdentifier = opts.clientIdentifier
   if (opts.dicts) {
     dict = opts.dicts[lang]
     if (fallbackToDefault && lang != defaultLang) mergeDicts(dict, opts.dicts[defaultLang])
   } else await loadDict()
 }
 
-export function detectLang(selectLang?: () => string|undefined, host = location.host, cookies = document.cookie) {
+export function detectLang(selectLang?: () => string | undefined, host = location.host, cookies = document.cookie) {
   const fromCookie = cookies.split('; ').find(s => s.startsWith(cookieName + '='))?.split('=')?.[1]
   const lang = ensureSupportedLang(fromCookie ?? selectLang?.() ?? navigator.language.split('-')[0])
   if (lang != fromCookie) rememberLang(lang)
@@ -53,7 +68,7 @@ export function rememberLang(lang: string) {
 async function loadDict() {
   if (!langs.includes(lang)) lang = defaultLang
   const promises = [loadJson(lang).then(r => dict = r)]
-  let fallback: Dict|undefined
+  let fallback: Dict | undefined
   if (defaultLang != lang && fallbackToDefault)
     promises.push(loadJson(defaultLang).then(r => fallback = r))
   await Promise.all(promises)
@@ -69,7 +84,30 @@ export function ensureSupportedLang(lang: string) {
 }
 
 export function resolve(key: string, from: Record<string, any> = dict): any {
-  return key.split('.').reduce((acc, key) => acc && acc[key], from)
+  const keys = key.split('.');
+  let result = from;
+
+  for (const k of keys) {
+    if (!result) break;
+
+    // Check for client-specific keys
+    if (typeof result[k] === 'object' && result[k] !== null) {
+
+      const clientKey = clientIdentifier;
+
+      if (clientKey && typeof result[k][clientKey] !== 'undefined') {
+        result = result[k][clientKey];
+        continue;
+      } else if (typeof result[k].default !== 'undefined') {
+        result = result[k].default;
+        continue;
+      }
+    }
+
+    result = result[k];
+  }
+
+  return result;
 }
 
 export function _(key: string, values?: Values, from: Dict = dict): string {
@@ -78,7 +116,7 @@ export function _(key: string, values?: Values, from: Dict = dict): string {
   return result ?? key
 }
 
-export function __(key: string, values?: Values): string|undefined {
+export function __(key: string, values?: Values): string | undefined {
   const result = _(key, values)
   return result != key ? result : undefined
 }

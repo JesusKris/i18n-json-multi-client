@@ -1,7 +1,16 @@
+/**
+ * ISC License
+ *
+ * Original Author: ["Anton Keks"]
+ * Original Repository: ["https://github.com/codeborne/i18n-json.git"]
+ *
+ * Modifications made by ["Robert Kris Laur"]
+ * - Removed langs.json sample and hardcoded the langs in the Init function.
+ */
+
 import {_, detectLang, ensureSupportedLang, init, rememberLang} from '../src/i18n.js'
 import {expect} from 'chai'
 import {describe} from 'mocha'
-import langs from '../sample/langs.json' assert {type: 'json'}
 import en from '../sample/en.json' assert {type: 'json'}
 
 describe('i18n', () => {
@@ -9,11 +18,11 @@ describe('i18n', () => {
     global.location = {host: 'hostname'} as Location
     global.document = {cookie: '', documentElement: {setAttribute: (name, value) => {}}} as Document
     global.navigator = {language: 'en-GB'} as Navigator
-    await init({langs, dicts: {en}})
+    await init({langs: ["en", "fi"], dicts: {en}})
   })
 
   it('translate', () => {
-    expect(_('contacts.email')).to.equal('E-mail')
+    expect(_('contacts.email')).to.equal('Email')
   })
 
   it('if translation fails it should return translation key', () => {
@@ -23,7 +32,7 @@ describe('i18n', () => {
 
   it('ensureSupportedLang', () => {
     expect(ensureSupportedLang('en')).to.equal('en')
-    expect(ensureSupportedLang('et')).to.equal('et')
+    expect(ensureSupportedLang('fi')).to.equal('fi')
     expect(ensureSupportedLang('??')).to.equal('en')
   })
 
@@ -52,10 +61,10 @@ describe('i18n', () => {
   })
 
   it('language is saved to cookie and url is replaced', () => {
-    rememberLang('et')
-    expect(document.cookie).to.contain('LANG=et')
-    document.cookie = 'LANG=et'
-    expect(detectLang()).to.eq('et')
+    rememberLang('fi')
+    expect(document.cookie).to.contain('LANG=fi')
+    document.cookie = 'LANG=fi'
+    expect(detectLang()).to.eq('fi')
 
     rememberLang('en')
     expect(document.cookie).to.contain('LANG=en')
