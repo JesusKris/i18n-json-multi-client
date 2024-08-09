@@ -90,6 +90,11 @@ export function _(key: string, values?: Values, from: Dict = dict): string {
   return result ?? key
 }
 
+export function __(key: string, values?: Values): string | undefined {
+  const result = _(key, values)
+  return result != key ? result : undefined
+}
+
 export function _json(key: string, from: Dict = dict): Dict | string {
   const keys = key.split('.');
   let result = from;
