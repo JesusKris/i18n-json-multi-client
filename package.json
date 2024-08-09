@@ -3,7 +3,7 @@
     "node": "~20"
   },
   "name": "@jesuskris/i18n-json-multi-client",
-  "version": "0.4.2",
+  "version": "0.4.3",
   "description": "Simple framework-neutral json-based translations with no dependencies and support for multi-client.\n \nForked and extended upon [@codeborne/i18n-json](https://github.com/codeborne/i18n-json/tree/main)",
   "type": "module",
   "files": ["build/src", "build/bin"],
