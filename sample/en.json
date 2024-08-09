@@ -9,6 +9,12 @@
   "contacts": {
     "email": "Email",
     "phone": "Phone",
-    "address": "Address"
+    "address": "Address",
+    "default": "A prank",
+    "parents": {
+      "client1": "Mom",
+      "client2": "Father",
+      "default": "Sister"
+    }
   }
 }

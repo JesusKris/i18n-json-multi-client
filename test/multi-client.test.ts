@@ -119,4 +119,17 @@ describe('multi-client', () => {
     expect(_("contacts.phone")).to.equal("Puhelin")
     expect(_("contacts.address")).to.equal("Osoite")
   });
+
+  it('should still resolve correct translation if key default exists nearby', async () => {
+    await init({langs, dicts, lang: "en"})
+
+    expect(_("contacts.address")).to.equal("Address")
+  });
+
+  it('should still resolve correct translation if multiple defaults exists nearby', async () => {
+    await init({langs, dicts, lang: "en", clientIdentifier: "client2"})
+
+    expect(_("contacts.parents.client1")).to.equal("Mom")
+    expect(_("contacts.parents")).to.equal("Father")
+  });
 })

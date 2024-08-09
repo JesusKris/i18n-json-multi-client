@@ -152,19 +152,22 @@ function resolve(key: string, from: Record<string, any> = dict): any {
       return value;
     }
 
-    // Check for client-specific or default key
-    const clientKey = clientIdentifier;
-    if (clientKey && value[clientKey] !== undefined) {
-      result = value[clientKey];
-    } else if (value['default'] !== undefined) {
-      result = value['default'];
+    // Proceed to the next level
+    result = value;
+  }
+
+  if (result && typeof result == 'object') {
+    // After traversing the keys, check if the final result has a client-specific key or a default value
+    if (clientIdentifier && result[clientIdentifier] !== undefined) {
+      return result[clientIdentifier];
+    } else if (result['default'] !== undefined) {
+      return result['default'];
     } else {
-      result = value;
+      return key
     }
   }
 
-  // If the final result is still an object, return the key
-  return typeof result === 'object' && result !== null ? key : result;
+  return result;
 }
 
 function replaceValues(text: string, values: Values) {
