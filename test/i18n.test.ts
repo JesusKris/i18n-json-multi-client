@@ -83,4 +83,9 @@ describe('i18n', () => {
     document.cookie = 'LANG=en'
     expect(detectLang()).to.eq('en')
   })
+
+  it('should return empty string if key is null', () => {
+    //@ts-ignore
+    expect(_(null)).to.equal("")
+  })
 })

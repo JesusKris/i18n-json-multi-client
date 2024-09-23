@@ -96,6 +96,10 @@ export function __(key: string, values?: Values): string | undefined {
 }
 
 export function _json(key: string, from: Dict = dict): Dict | string {
+  if (key === null || key === undefined) {
+    return "";
+  }
+
   const keys = key.split('.');
   let result = from;
 
@@ -137,7 +141,12 @@ function loadJson(lang: string) {
 }
 
 function resolve(key: string, from: Record<string, any> = dict): any {
+  if (key === null || key === undefined) {
+    return "";
+  }
+
   const keys = key.split('.');
+
   let result = from;
 
   for (const k of keys) {

@@ -18,7 +18,7 @@
  */
 
 import {describe} from "mocha";
-import {_json, init} from '../src/i18n.js'
+import {_, _json, init} from '../src/i18n.js'
 import en from '../sample/en.json' assert {type: 'json'}
 import fi from '../sample/fi.json' assert {type: 'json'}
 import {expect} from "chai";
@@ -58,4 +58,11 @@ describe('_json', () => {
 
     expect(_json("hello")).to.eq("hello")
   });
+
+  it('should return empty string if key is null', async () => {
+    await init({langs, dicts, clientIdentifier: undefined})
+
+    //@ts-ignore
+    expect(_(null)).to.equal("")
+  })
 })
